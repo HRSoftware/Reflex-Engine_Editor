@@ -1,0 +1,149 @@
+{
+    "GameObjects": [{
+        "name": "Building1",
+        "model": "House",
+        "position": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "scale": {
+            "x": 0.001,
+            "y": 0.001,
+            "z": 0.001
+        }
+    }],
+    "Materials": [{
+            "name": "HouseMaterial",
+            "shader": "modelLoadingShader",
+            "textures": {
+                "DIFFUSE": "diffuseTexture",
+                "SPECULAR": "specularTexture"
+            }
+
+        }, {
+            "name": "skyMaterial",
+            "shader": "skyboxShader",
+            "textures": {
+                "CUBEMAP": "SkyBlue"
+            }
+
+        },
+        {
+            "name": "defaultMaterial",
+            "shader": "defaultShader",
+            "textures": {
+                "DIFFUSE": "defaultTexture"
+            }
+
+        }
+    ],
+    "Textures": [{
+            "name": "defaultTexture",
+            "path": "Resources/Textures/Grid.png",
+            "type": "diffuse"
+        },
+        {
+            "name": "house_diffuse",
+            "path": "Resources/Models/House/house_diffuse.tga",
+            "type": "diffuse"
+        },
+        {
+            "name": "house_normal",
+            "path": "Resources/Models/House/house_normal.tga",
+            "type": "normal"
+        },
+        {
+            "name": "house_spec",
+            "path": "Resources/Models/House/house_spec.tga",
+            "type": "specular"
+        }
+    ],
+    "Models": [{
+        "name": "BlockOfFlats",
+        "model": "Resources/Models/BlockOfFlats/apartment.FBX",
+        "meshes": [{
+            "mesh01": {
+                "vertices": [0, 2, 1, 5, 6, 2, 4, 6, 3, 4, 3, 2, 4],
+                "normals": [2, 2, 24, 23, 2, 321, 312, 231, 3123, 123],
+                "material": "defaultMaterial"
+            },
+            "mesh02": {
+                "vertices": [0, 2, 1, 5, 6, 2, 4, 6, 3, 4, 3, 2, 4],
+                "normals": [2, 2, 24, 23, 2, 321, 312, 231, 3123, 123],
+                "material": "defaultMaterial"
+            },
+            "mesh03": {
+                "vertices": [0, 2, 1, 5, 6, 2, 4, 6, 3, 4, 3, 2, 4],
+                "normals": [2, 2, 24, 23, 2, 321, 312, 231, 3123, 123],
+                "material": "defaultMaterial"
+            }
+        }]
+    }],
+
+    "Shaders": [{
+            "name": "defaultShader",
+            "path": "Shaders/basicShader",
+            "type": [
+                "VERTEX",
+                "FRAGMENT"
+            ]
+        },
+        {
+            "name": "shadowMapShader",
+            "path": "Shaders/core/shadowMapShader",
+            "type": [
+                "VERTEX",
+                "FRAGMENT"
+            ]
+        },
+        {
+            "name": "materialShader",
+            "path": "Shaders/materialShader",
+            "type": [
+                "VERTEX",
+                "FRAGMENT"
+            ]
+        },
+        {
+            "name": "skyboxShader",
+            "path": "Shaders/core/skyboxShader",
+            "type": [
+                "VERTEX",
+                "FRAGMENT"
+            ]
+        },
+        {
+            "name": "framebufferShader",
+            "path": "Shaders/framebufferShader",
+            "type": [
+                "VERTEX",
+                "FRAGMENT"
+            ]
+        },
+        {
+            "name": "lightingShader",
+            "path": "Shaders/basicLighting",
+            "type": [
+                "VERTEX",
+                "FRAGMENT"
+            ]
+        },
+        {
+            "name": "modelLoadingShader",
+            "path": "Shaders/core/modelLoadingShader",
+            "type": [
+                "VERTEX",
+                "FRAGMENT"
+            ]
+        },
+        {
+            "name": "debugDepthShader",
+            "path": "Shaders/core/debugDepthShader",
+            "type": [
+                "VERTEX",
+                "FRAGMENT"
+            ]
+        }
+    ]
+}

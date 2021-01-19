@@ -1,0 +1,74 @@
+Textures:
+  - name: default
+    path: Resources/Textures/Grid.png
+    type: DIFFUSE
+  - name: house_diffuse
+    path: Resources/Models/House/house_diffuse.tga
+    type: DIFFUSE
+  - name: house_normal
+    path: Resources/Models/House/house_normal.tga
+    type: NORMAL
+  - name: house_spec
+    path: Resources/Models/House/house_spec.tga
+    type: SPECULAR
+  - name: skybox_map
+    type: CUBEMAP_COLLECTION
+    index:
+      RIGHT: Resources/Skybox/Default/right.jpg
+      LEFT: Resources/Skybox/Default/left.jpg
+      UP: Resources/Skybox/Default/top.jpg
+      DOWN: Resources/Skybox/Default/bottom.jpg
+      FRONT: Resources/Skybox/Default/front.jpg
+      BACK: Resources/Skybox/Default/back.jpg
+---
+Shaders:
+  - name: debugDepthShader
+    path: debugDepthShader
+    type: [FRAGMENT, VERTEX]
+  - name: default
+    path: materialShader
+    type: [FRAGMENT, VERTEX]
+  - name: framebufferShader
+    path: framebufferShader
+    type: [FRAGMENT, VERTEX]
+  - name: lightingShaders
+    path: lightingShaders
+    type: [FRAGMENT, VERTEX]
+  - name: materialShader
+    path: materialShader
+    type: [FRAGMENT, VERTEX]
+  - name: modelLoadingShader
+    path: modelLoadingShader
+    type: [FRAGMENT, VERTEX]
+  - name: shadowMapShader
+    path: shadowMapShader
+    type: [FRAGMENT, VERTEX]
+  - name: skyboxShader
+    path: skyboxShader
+    type: [FRAGMENT, VERTEX]
+---
+Materials:
+  - name: HouseMaterial
+    shader: modelLoadingShader
+    textures:
+      DIFFUSE: defaultTexture
+      SPECULAR: defaultTexture
+  - name: default
+    shader: default
+    textures:
+      DIFFUSE: defaultTexture
+  - name: skyMaterial
+    shader: skyboxShader
+    textures:
+      CUBEMAP_COLLECTION: skybox_map
+---
+Models:
+  - name: TestModel
+    path: Resources/Models/BlockOfFlats/apartment.fbx
+---
+GameObjects:
+  - name: TestGameObject
+    model: TestModel
+    position: [10, 0, 10]
+    scale: [0.00100000005, 0.00100000005, 0.00100000005]
+    rotation: [0, 0, 0, 0]

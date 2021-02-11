@@ -2,10 +2,12 @@
 
 #include "Reflex-Logging.h"
 #include "Includes/Scene.h"
+#include "Reflex-Renderer/Renderer_OpenGL.h"
 
 #include "Globals.h"
 #include "Settings.h"
 #include "UI/UI.h"
+#include "Reflex-Core/Skybox.h"
 
 void processInput(const double deltaTime)
 {
@@ -70,12 +72,12 @@ bool Reflex::Scene::initScene(std::shared_ptr<Managers::AssetManager> _manager)
     glfwSetScrollCallback(settings->windowHandle, scroll_callback);
     glfwSetMouseButtonCallback(settings->windowHandle, mouseInput_callback);
 
-    //m_assetManager = _manager;
-    Reflex::Globals::Render::_activeCamera = std::move(std::make_shared<Core::Camera>());
+    m_assetManager = _manager;
+    Reflex::Globals::Render::_activeCamera = std::make_shared<Core::Camera>();
 
     loadResources();
     //Import::importModel("TestModel", "Resources/Models/House/house_obj.obj");
-    //m_skybox.init();
+    m_skybox = std::make_shared<Reflex::Core::Skybox>(m_assetManager->getMaterial("skyMaterial"));
     return true;
 }
 
@@ -113,6 +115,8 @@ void Reflex::Scene::run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         UI::updateUI(settings->windowHandle);
+        ImGui::ShowDemoWindow();
+
         UI::showMainMenu();
         ImGui::ShowMetricsWindow();
         //UI::showTexture(resourceManager._resourceCache->getTexture("sky"));
@@ -125,12 +129,12 @@ void Reflex::Scene::run()
             near_plane, far_plane);
         glm::mat4 view = Reflex::Globals::Render::_activeCamera->getViewMatrix();
 
-        //Reflex::Rendering::currentRenderValues.update(view, proj);
+        m_sceneRender->updateCurrentRenderValue(Renderer::CurrentRenderValues({ view, proj }));
 
 
         //Reflex::Globals::Render::_renderer->renderBatch(_GOVec);
 
-       // m_skybox.Draw(Reflex::Rendering::currentRenderValues);
+        m_sceneRender->renderSkybox({view, proj});
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -147,6 +151,11 @@ void Reflex::Scene::stop()
 
 void Reflex::Scene::save()
 {
+}
+
+void Reflex::Scene::setRenderer(const std::shared_ptr<Renderer::Renderer_OpenGL>& renderer)
+{
+    m_sceneRender = renderer;
 }
 
 

@@ -254,7 +254,7 @@ namespace UI {
 
     inline void showMainMenu()
     {
-        bool open = false, save = false, view = false, entities = false, debug = false, import = false;
+        bool open = false, save = false, view = false, entities = false, debug = false, import = false, demo = false, userGuide = false;
         if (ImGui::BeginMainMenuBar()) 
         {
             if (ImGui::BeginMenu("File")) 
@@ -279,6 +279,12 @@ namespace UI {
                 if (ImGui::MenuItem("Debug", nullptr))
                     debug = true;
 
+                if (ImGui::MenuItem("Demo", nullptr))
+                    demo = true;
+
+                if (ImGui::MenuItem("UserGuide", nullptr))
+                    userGuide = true;
+
                 if (ImGui::MenuItem("Exit", nullptr))
                     glfwWindowShouldClose(Reflex::Settings::getInstance()->windowHandle);
 
@@ -300,6 +306,10 @@ namespace UI {
             ImGui::OpenPopup("Entites");
         if (debug)
             ImGui::OpenPopup("Debug");
+        if (demo)
+            ImGui::ShowDemoWindow(&demo);
+        if (userGuide)
+            ImGui::ShowUserGuide();
 
         /* Optional third parameter. Support opening only compressed rar/zip files.
         * Opening any other file will show error, return false and won't close the dialog.

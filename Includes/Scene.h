@@ -4,6 +4,7 @@
 #include <Reflex-AssetManager.h>
 #include <vector>
 #include <string>
+#include "Reflex-Renderer/Renderer_OpenGL.h">"
 
 struct GLFWwindow;
 namespace Reflex {
@@ -27,13 +28,15 @@ namespace Reflex {
         void run();
         void stop();
         void save();
+        void setRenderer(const std::shared_ptr<Renderer::Renderer_OpenGL>& renderer);
 
     private:
         std::map<std::string, std::shared_ptr<Reflex::Core::GameObject>> _GOMap;
         std::vector<std::shared_ptr<Reflex::Core::GameObject>> _GOVec;
 
         //std::shared_ptr<IBaseLight> m_sunLight{};
-        //Skybox m_skybox;
+
+        std::shared_ptr<Core::Skybox> m_skybox;
 
         //std::shared_ptr<Reflex::Managers::ResourceManager> resourceManager{};
         double deltaTime = 0.0f;
@@ -42,6 +45,7 @@ namespace Reflex {
         std::shared_ptr<Reflex::Log::Logger> log;
         std::shared_ptr<Managers::AssetManager> m_assetManager;
         std::shared_ptr<Reflex::Core::Skybox> skybox;
+        std::shared_ptr<Reflex::Renderer::Renderer_OpenGL> m_sceneRender;
 
 
 

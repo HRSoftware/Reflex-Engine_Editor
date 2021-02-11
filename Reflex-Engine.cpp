@@ -5,6 +5,7 @@
 #include "Reflex-Core/Camera.h"
 #include "Settings.h"
 #include "Globals.h"
+#include "Reflex-Renderer/Renderer_OpenGL.h"
 #include "Includes/Scene.h"
 
 void error_callback(int error, const char* description)
@@ -37,7 +38,7 @@ int main()
     
 
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-    auto videoMode = glfwGetVideoMode(monitor);
+    const auto* videoMode = glfwGetVideoMode(monitor);
     settings->windowHandle = glfwCreateWindow(settings->screenDimensions.first, settings->screenDimensions.second,
         settings->getTitleString(true).c_str(),
         nullptr,
@@ -72,7 +73,7 @@ int main()
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(settings->windowHandle, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+    ImGui_ImplOpenGL3_Init("#version 440");
 
     appLog.writeNotice("OpenGL {}", glGetString(GL_VERSION));
     glfwSetInputMode(settings->windowHandle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -80,10 +81,11 @@ int main()
     if (glfwRawMouseMotionSupported())
         glfwSetInputMode(settings->windowHandle, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
-
+    std::shared_ptr<Reflex::Renderer::Renderer_OpenGL> sceneRender = std::make_shared<Reflex::Renderer::Renderer_OpenGL>();
     Reflex::Scene _newScene;
-    auto assetManager = Reflex::Managers::AssetManager::getInstance();
+    const auto assetManager = Reflex::Managers::AssetManagerInstance->getInstance();
     _newScene.initScene(assetManager);
+    _newScene.setRenderer(sceneRender);
 
     //ResourceRegister resourceRegister("Resources/");
 

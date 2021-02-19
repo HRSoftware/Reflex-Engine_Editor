@@ -11,7 +11,10 @@
 void error_callback(int error, const char* description)
 {
     auto log = spdlog::get("app_Logger");
-    log->error("Error: %s\n", description);
+    if (log) 
+    {
+        log->error("Error: %s\n", description);
+    }
 }
 
 int main()
@@ -19,10 +22,10 @@ int main()
     std::vector<spdlog::sink_ptr> sinks;
     sinks.push_back(std::make_shared <spdlog::sinks::stdout_sink_st>());
 
-    Reflex::Log::Logger appLog("app_Logger");
-    appLog.writeNotice("\t Reflex-Engine initialising\n");
+    auto appLog = Reflex::Log::LogRegister::createNewLogger("app_Logger");
+    appLog->writeNotice("\t Reflex-Engine initialising\n");
 
-    appLog.writeNotice("\t GLFW Initialising...");
+    appLog->writeNotice("\t GLFW Initialising...");
     glfwSetErrorCallback(error_callback);
 
     auto _activeCamera = std::make_shared<Reflex::Core::Camera>();
@@ -38,7 +41,7 @@ int main()
     
 
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-    const auto* videoMode = glfwGetVideoMode(monitor);
+    auto videoMode = glfwGetVideoMode(monitor);
     settings->windowHandle = glfwCreateWindow(settings->screenDimensions.first, settings->screenDimensions.second,
         settings->getTitleString(true).c_str(),
         nullptr,
@@ -51,7 +54,7 @@ int main()
         const char* description;
         int code = glfwGetError(&description);
 
-        appLog.writeError("Failed to create window - {0}:{1}", code, description);
+        appLog->writeError("Failed to create window - {0}:{1}", code, description);
         return false;
     }
 
@@ -59,11 +62,15 @@ int main()
     glfwMakeContextCurrent(settings->windowHandle);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        appLog.writeError("Failed to init. OpenGL Context");
+        appLog->writeError("Failed to init OpenGL Context");
         return false;
     }
+    else
+    {
+        appLog->writeNotice("Successfully initialised OpenGL Context");
+    }
 
-    appLog.writeNotice("Initialising UI");
+    appLog->writeNotice("Initialising UI");
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -75,7 +82,7 @@ int main()
     ImGui_ImplGlfw_InitForOpenGL(settings->windowHandle, true);
     ImGui_ImplOpenGL3_Init("#version 440");
 
-    appLog.writeNotice("OpenGL {}", glGetString(GL_VERSION));
+    appLog->writeNotice("OpenGL {0}", glGetString(GL_VERSION));
     glfwSetInputMode(settings->windowHandle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     if (glfwRawMouseMotionSupported())
@@ -92,7 +99,7 @@ int main()
 
     _newScene.run();
 
-    appLog.writeNotice("Terminating");
+    appLog->writeNotice("Terminating");
     glfwTerminate();
 }
 

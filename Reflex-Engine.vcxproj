@@ -115,7 +115,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;NOMINMAX;_CONSOLE;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;NOMINMAX;_CONSOLE;GLAD_GLAPI_EXPORT;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>E:\Programming\Libraries\C++\Includes\imgui;E:\Programming\Libraries\C++\Includes;D:\Documents\Programming\Projects\Reflex-Engine_DLLs\OutputCollection;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -124,7 +124,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3_x64D.lib;gladLib.lib;Reflex-LoggingD.lib;Reflex-CoreD.lib;Reflex-RendererD.lib;Reflex-AssetManagerD.lib;Reflex-ImportExportD.lib;Reflex-BuildersD.lib;yaml-cppD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;gladLib_d.lib;glfw3_x64D.lib;Reflex-LoggingD.lib;Reflex-CoreD.lib;Reflex-BuildersD.lib;Reflex-RendererD.lib;Reflex-AssetManagerD.lib;Reflex-ImportExportD.lib;yaml-cppD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>E:\Programming\Libraries\C++\debug;D:\Documents\Programming\Projects\Reflex-Engine_DLLs\OutputCollection\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -138,7 +138,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;NOMINMAX;_CONSOLE;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;NOMINMAX;_CONSOLE;GLAD_GLAPI_EXPORT;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>E:\Programming\Libraries\C++\Includes\imgui;E:\Programming\Libraries\C++\Includes;D:\Documents\Programming\Projects\Reflex-Engine_DLLs\OutputCollection;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

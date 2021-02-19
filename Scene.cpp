@@ -77,6 +77,7 @@ bool Reflex::Scene::initScene(std::shared_ptr<Managers::AssetManager> _manager)
 
     loadResources();
     //Import::importModel("TestModel", "Resources/Models/House/house_obj.obj");
+    
     m_skybox = std::make_shared<Reflex::Core::Skybox>(m_assetManager->getMaterial("skyMaterial"));
     return true;
 }
@@ -100,6 +101,9 @@ void Reflex::Scene::run()
         glfwSetInputMode(settings->windowHandle, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
     ImGuiIO& io = ImGui::GetIO();
+
+    m_sceneRender->setCamera(Globals::Render::_activeCamera);
+    m_sceneRender->setSkybox(m_skybox);
 
     while ( glfwWindowShouldClose(settings->windowHandle) == false )
     {
@@ -132,9 +136,9 @@ void Reflex::Scene::run()
         m_sceneRender->updateCurrentRenderValue(Renderer::CurrentRenderValues({ view, proj }));
 
 
-        //Reflex::Globals::Render::_renderer->renderBatch(_GOVec);
+       m_sceneRender->renderBatch(_GOVec);
 
-        m_sceneRender->renderSkybox({view, proj});
+       m_sceneRender->renderSkybox({view, proj}); 
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

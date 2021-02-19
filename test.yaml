@@ -1,5 +1,5 @@
 Textures:
-  - name: default
+  - name: defaultTexture
     path: Resources/Textures/Grid.png
     type: DIFFUSE
   - name: house_diffuse
@@ -25,14 +25,14 @@ Shaders:
   - name: debugDepthShader
     path: debugDepthShader
     type: [FRAGMENT, VERTEX]
-  - name: default
+  - name: defaultShader
     path: materialShader
     type: [FRAGMENT, VERTEX]
   - name: framebufferShader
     path: framebufferShader
     type: [FRAGMENT, VERTEX]
-  - name: lightingShaders
-    path: lightingShaders
+  - name: lightingShader
+    path: basicLighti
     type: [FRAGMENT, VERTEX]
   - name: materialShader
     path: materialShader
@@ -53,8 +53,8 @@ Materials:
     textures:
       DIFFUSE: defaultTexture
       SPECULAR: defaultTexture
-  - name: default
-    shader: default
+  - name: defaultMaterial
+    shader: defaultShader
     textures:
       DIFFUSE: defaultTexture
   - name: skyMaterial

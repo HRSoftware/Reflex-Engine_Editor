@@ -7,28 +7,19 @@
 #include "Globals.h"
 #include "Reflex-Renderer/Renderer_OpenGL.h"
 #include "Includes/Scene.h"
+#include "Includes/Reflex_Window.h"
 
 void error_callback(int error, const char* description)
 {
     auto log = spdlog::get("app_Logger");
     if (log) 
     {
-        log->error("Error: %s\n", description);
+        log->error("Error: {0}\n \t-", description);
     }
 }
 
-int main()
+void initGLFW()
 {
-    std::vector<spdlog::sink_ptr> sinks;
-    sinks.push_back(std::make_shared <spdlog::sinks::stdout_sink_st>());
-
-    auto appLog = Reflex::Log::LogRegister::createNewLogger("app_Logger");
-    appLog->writeNotice("\t Reflex-Engine initialising\n");
-
-    appLog->writeNotice("\t GLFW Initialising...");
-    glfwSetErrorCallback(error_callback);
-
-    auto _activeCamera = std::make_shared<Reflex::Core::Camera>();
     glfwInit();
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -36,65 +27,36 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+}
 
-    std::shared_ptr<Reflex::Settings> settings = Reflex::Settings::getInstance();
-    
+int main()
+{
+    std::vector<spdlog::sink_ptr> sinks;
+    sinks.push_back(std::make_shared <spdlog::sinks::stdout_sink_st>());
 
-    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-    auto videoMode = glfwGetVideoMode(monitor);
-    settings->windowHandle = glfwCreateWindow(settings->screenDimensions.first, settings->screenDimensions.second,
-        settings->getTitleString(true).c_str(),
-        nullptr,
-        nullptr);
+    auto appLog = Reflex::Log::createNewLogger("app_Logger");
+    appLog->writeNotice("\t Reflex-Engine initialising\n");
 
-    Reflex::Globals::Window::_windowHandle = settings->windowHandle;
+    appLog->writeNotice("\t GLFW Initialising...");
+    glfwSetErrorCallback(error_callback);
+    initGLFW();
 
-    if(settings->windowHandle == nullptr)
-    {
-        const char* description;
-        int code = glfwGetError(&description);
+    auto _activeCamera = std::make_shared<Reflex::Core::Camera>();
 
-        appLog->writeError("Failed to create window - {0}:{1}", code, description);
-        return false;
-    }
+    //GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    //auto videoMode = glfwGetVideoMode(monitor);
 
 
-    glfwMakeContextCurrent(settings->windowHandle);
+    Reflex::Globals::windowGlobals.activeWindow = std::make_shared<Reflex::Window::Reflex_Window>(1920, 1080, (char*) "Relex Engine 1.0");
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        appLog->writeError("Failed to init OpenGL Context");
-        return false;
-    }
-    else
-    {
-        appLog->writeNotice("Successfully initialised OpenGL Context");
-    }
+    Reflex::Globals::windowGlobals.activeWindow->initUI();
 
-    appLog->writeNotice("Initialising UI");
 
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    (void)io;
-
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(settings->windowHandle, true);
-    ImGui_ImplOpenGL3_Init("#version 440");
-
-    appLog->writeNotice("OpenGL {0}", glGetString(GL_VERSION));
-    glfwSetInputMode(settings->windowHandle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
-    if (glfwRawMouseMotionSupported())
-        glfwSetInputMode(settings->windowHandle, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-
-    std::shared_ptr<Reflex::Renderer::Renderer_OpenGL> sceneRender = std::make_shared<Reflex::Renderer::Renderer_OpenGL>();
+    const std::shared_ptr<Reflex::Renderer::Renderer_OpenGL> sceneRender = std::make_shared<Reflex::Renderer::Renderer_OpenGL>();
     Reflex::Scene _newScene;
     const auto assetManager = Reflex::Managers::AssetManagerInstance->getInstance();
     _newScene.initScene(assetManager);
     _newScene.setRenderer(sceneRender);
-
-    //ResourceRegister resourceRegister("Resources/");
 
 
     _newScene.run();
@@ -103,6 +65,3 @@ int main()
     glfwTerminate();
 }
 
-
-
-//assetManage.loadTexture_FromFile("D:/Documents/Programming/Projects/Reflex-EngineOLD/test.yaml");

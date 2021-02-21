@@ -160,6 +160,8 @@ xcopy /y E:\Programming\Libraries\C++\release\assimp-vc140_x64-mt.dll $(Intermed
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Globals.cpp" />
+    <ClCompile Include="Reflex_Window.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -193,6 +195,7 @@ xcopy /y E:\Programming\Libraries\C++\release\assimp-vc140_x64-mt.dll $(Intermed
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Includes\Scene.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Includes\Reflex_Window.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="UI\UI.h" />
   </ItemGroup>

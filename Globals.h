@@ -6,30 +6,38 @@
 #include "Reflex-Core/Material.h"
 #include "Reflex-Core/Shader.h"
 #include "glfw3.h"
+#include "Includes/Reflex_Window.h"
+#include "Reflex-Renderer/Renderer_OpenGL.h"
 
-namespace Reflex::Globals{
-    namespace Window {
-        static GLFWwindow* _windowHandle;
-        inline float lastX = 0;
-        inline float lastY = 0;
-        inline bool firstMouse = true;
-        inline bool UIHasFocus = false;
-    };
+namespace Reflex::Globals
+{
+    inline struct WindowGlobals
+    {
+        WindowGlobals();
+        std::shared_ptr<Reflex::Window::Reflex_Window> activeWindow;
+        float lastX = 0;
+        float lastY = 0;
+        bool firstMouse = true;
+        bool UIHasFocus = false;
+        std::shared_ptr<Reflex::Log::Logger> logger;
+    } windowGlobals;
 
-    namespace Render {
-
-        namespace Defaults
+    
+    inline struct RendererGlobals
+    {
+        struct Defaults
         {
-            inline std::shared_ptr<Reflex::Core::Material> _defaultMaterial;
-            inline std::shared_ptr<Reflex::Core::Shader> _defaultShader;
-        }
+            std::shared_ptr<Reflex::Core::Material> _defaultMaterial;
+            std::shared_ptr<Reflex::Core::Shader> _defaultShader;
+        } defaults;
 
-        //inline std::shared_ptr<Reflex::Rendering::Renderer> _renderer = nullptr;
-        inline std::shared_ptr<Reflex::Core::Shader> _activeShader = nullptr;
-        inline std::shared_ptr<Reflex::Core::Material> _activeMaterial = std::make_shared<Reflex::Core::Material>();
-        inline std::shared_ptr<Reflex::Core::Camera> _activeCamera = nullptr;
+        std::shared_ptr<Reflex::Core::Shader> _activeShader = nullptr;
+        std::shared_ptr<Reflex::Core::Material> _activeMaterial = std::make_shared<Reflex::Core::Material>();
+        std::shared_ptr<Reflex::Core::Camera> _activeCamera = nullptr;
         //inline std::vector<std::shared_ptr<Reflex::Core::ILighting>> _activeLights;
-    };
+        std::shared_ptr<Reflex::Log::Logger> logger;
+        RendererGlobals();
+    } rendererGlobals;
 
 
 

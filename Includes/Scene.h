@@ -11,9 +11,12 @@ namespace Reflex {
     namespace Core {
         class Camera;
         class GameObject;
-        class Skybox;
+        struct Skybox;
     }
-
+    namespace Window
+    {
+        class Reflex_Window;
+    }
     namespace Log
     {
         class Logger;
@@ -22,40 +25,30 @@ namespace Reflex {
     class Scene
     {
     public:
-        Scene() = default;
+        Scene();
         bool initScene(std::shared_ptr<Managers::AssetManager> _manager);
         void loadResources();
         void run();
         void stop();
         void save();
         void setRenderer(const std::shared_ptr<Renderer::Renderer_OpenGL>& renderer);
+        void processInput(const double delta);
+
+
 
     private:
-        std::map<std::string, std::shared_ptr<Reflex::Core::GameObject>> _GOMap;
-        std::vector<std::shared_ptr<Reflex::Core::GameObject>> _GOVec;
+        std::map<std::string, std::shared_ptr<Reflex::Core::GameObject>> m_GameObjectMap;
+        std::vector<std::shared_ptr<Reflex::Core::GameObject>> m_GameObjectVec;
 
         //std::shared_ptr<IBaseLight> m_sunLight{};
 
-        std::shared_ptr<Core::Skybox> m_skybox;
-
-        //std::shared_ptr<Reflex::Managers::ResourceManager> resourceManager{};
         double deltaTime = 0.0f;
         double lastFrame = 0.0f;
 
         std::shared_ptr<Reflex::Log::Logger> log;
         std::shared_ptr<Managers::AssetManager> m_assetManager;
-        std::shared_ptr<Reflex::Core::Skybox> skybox;
+        std::shared_ptr<Reflex::Core::Skybox> m_skybox;
         std::shared_ptr<Reflex::Renderer::Renderer_OpenGL> m_sceneRender;
-
-
-
+        std::shared_ptr<Reflex::Window::Reflex_Window> m_window;
     };
 }
-//
-//static void processInput(double deltaTime);
-//
-//static void mouse_callback(GLFWwindow*, double xpos, double ypos);
-//
-//static void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
-//
-//static void mouseInput_callback(GLFWwindow* window, int button, int action, int mods);

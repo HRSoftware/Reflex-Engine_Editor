@@ -1,20 +1,8 @@
 #include "pch.h"
 #include "Settings.h"
 
-std::shared_ptr<Reflex::Settings> Reflex::Settings::instance = nullptr;
 
-Reflex::Settings::Settings()
-{
-}
 
-std::shared_ptr<Reflex::Settings> Reflex::Settings::getInstance()
-{
-    if ( !instance )
-    {
-        instance = std::shared_ptr<Settings>(new Settings);
-    }
-    return instance;
-}
 
 std::string Reflex::Settings::getVersionString()
 {

@@ -9,74 +9,96 @@
 #include "UI/UI.h"
 #include "Reflex-Core/Skybox.h"
 
-void processInput(const double deltaTime)
+void Reflex::Scene::processInput(const double deltaTime)
 {
     using Reflex::Enums::Camera_Movement;
+    if(!m_window->hasFocus())
+    {
+        //log->writeNotice("Window does not have focus");
+        return;
+    }
+    if (m_window->getKeyState(GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        m_window->close();
 
-    auto settings = Reflex::Settings::getInstance();
-    if ( glfwGetKey(settings->windowHandle, GLFW_KEY_ESCAPE) == GLFW_PRESS )
-        Reflex::Globals::Render::_activeCamera->toogleLookAround();
+    if ( m_window->getKeyState(GLFW_KEY_W) == GLFW_PRESS )
+        Reflex::Globals::rendererGlobals._activeCamera->ProcessKeyboard(Camera_Movement::FORWARD, deltaTime);
+    if ( m_window->getKeyState(GLFW_KEY_S) == GLFW_PRESS )
+        Reflex::Globals::rendererGlobals._activeCamera->ProcessKeyboard(Camera_Movement::BACKWARD, deltaTime);
+    if ( m_window->getKeyState(GLFW_KEY_A) == GLFW_PRESS )
+        Reflex::Globals::rendererGlobals._activeCamera->ProcessKeyboard(Camera_Movement::LEFT, deltaTime);
+    if ( m_window->getKeyState(GLFW_KEY_D) == GLFW_PRESS )
+        Reflex::Globals::rendererGlobals._activeCamera->ProcessKeyboard(Camera_Movement::RIGHT, deltaTime);
 
-    if ( glfwGetKey(settings->windowHandle, GLFW_KEY_W) == GLFW_PRESS )
-        Reflex::Globals::Render::_activeCamera->ProcessKeyboard(Camera_Movement::FORWARD, deltaTime);
-    if ( glfwGetKey(settings->windowHandle, GLFW_KEY_S) == GLFW_PRESS )
-        Reflex::Globals::Render::_activeCamera->ProcessKeyboard(Camera_Movement::BACKWARD, deltaTime);
-    if ( glfwGetKey(settings->windowHandle, GLFW_KEY_A) == GLFW_PRESS )
-        Reflex::Globals::Render::_activeCamera->ProcessKeyboard(Camera_Movement::LEFT, deltaTime);
-    if ( glfwGetKey(settings->windowHandle, GLFW_KEY_D) == GLFW_PRESS )
-        Reflex::Globals::Render::_activeCamera->ProcessKeyboard(Camera_Movement::RIGHT, deltaTime);
+    if ( m_window->getKeyState(GLFW_KEY_LEFT_ALT) == GLFW_PRESS )
+        Reflex::Globals::rendererGlobals._activeCamera->toogleLookAround();
 
-    if ( glfwGetKey(settings->windowHandle, GLFW_KEY_LEFT_ALT) == GLFW_PRESS )
-        Reflex::Globals::Render::_activeCamera->toogleLookAround();
+    if ( m_window->getKeyState(GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS )
+        Reflex::Globals::rendererGlobals._activeCamera->MovementSpeed =  Reflex::Globals::rendererGlobals._activeCamera->boostSpeed;
 
-    if ( glfwGetKey(settings->windowHandle, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS )
-        Reflex::Globals::Render::_activeCamera->MovementSpeed = Reflex::Globals::Render::_activeCamera->boostSpeed;
-
-    if ( glfwGetKey(settings->windowHandle, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE )
-        Reflex::Globals::Render::_activeCamera->MovementSpeed = Reflex::Globals::Render::_activeCamera->normalSpeed;
+    if ( m_window->getKeyState(GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE )
+        Reflex::Globals::rendererGlobals._activeCamera->MovementSpeed =  Reflex::Globals::rendererGlobals._activeCamera->normalSpeed;
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
 
-    if ( Reflex::Globals::Window::firstMouse && !Reflex::Globals::Window::UIHasFocus )
+    if ( Reflex::Globals::windowGlobals.firstMouse && Reflex::Globals::windowGlobals.UIHasFocus )
     {
-        Reflex::Globals::Window::lastX = xpos;
-        Reflex::Globals::Window::lastY = ypos;
-        Reflex::Globals::Window::firstMouse = false;
+        Reflex::Globals::windowGlobals.lastX = xpos;
+        Reflex::Globals::windowGlobals.lastY = ypos;
+        Reflex::Globals::windowGlobals.firstMouse = false;
     }
 
-    const auto xoffset = xpos - Reflex::Globals::Window::lastX;
-    const auto yoffset = Reflex::Globals::Window::lastY - ypos; // reversed since y-coordinates go from bottom to top
+    const auto xoffset = xpos - Reflex::Globals::windowGlobals.lastX;
+    const auto yoffset = Reflex::Globals::windowGlobals.lastY - ypos; // reversed since y-coordinates go from bottom to top
 
-    Reflex::Globals::Window::lastX = xpos;
-    Reflex::Globals::Window::lastY = ypos;
+     Reflex::Globals::windowGlobals.lastX = xpos;
+     Reflex::Globals::windowGlobals.lastY = ypos;
 
-    Reflex::Globals::Render::_activeCamera->ProcessMouseMovement(xoffset, yoffset);
+    Reflex::Globals::rendererGlobals._activeCamera->ProcessMouseMovement(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow* window, const double xoffset, const double yoffset)
 {
-    Reflex::Globals::Render::_activeCamera->ProcessMouseScroll(yoffset);
+    Reflex::Globals::rendererGlobals._activeCamera->ProcessMouseScroll(yoffset);
 }
 
-void mouseInput_callback(GLFWwindow* window, int button, int action, int mods) {}
+void mouseInput_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if(button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+    {
+        Reflex::Globals::rendererGlobals._activeCamera->toogleLookAround();
+        Reflex::Globals::rendererGlobals._activeCamera->toggleMovement();
+    }
+}
+
+void window_focus_callback(GLFWwindow* window, int focused)
+{
+}
+
+
+Reflex::Scene::Scene()
+{
+    m_window = Reflex::Globals::windowGlobals.activeWindow;
+    m_sceneRender = std::make_shared<Reflex::Renderer::Renderer_OpenGL>();
+}
 
 bool Reflex::Scene::initScene(std::shared_ptr<Managers::AssetManager> _manager)
 {
-    log = std::make_shared<Reflex::Log::Logger>("Scene_Log");
+    log = Reflex::Log::createNewLogger("Scene_Log");
 
     log->writeNotice("Initialising scene");
-    auto settings = Reflex::Settings::getInstance();
-    glfwSetCursorPosCallback(settings->windowHandle, mouse_callback);
-    glfwSetScrollCallback(settings->windowHandle, scroll_callback);
-    glfwSetMouseButtonCallback(settings->windowHandle, mouseInput_callback);
+    m_window->setMouseButtonCallback(mouseInput_callback);
+    m_window->setMouseMoveCallback(mouse_callback);
+    m_window->setMouseScrollCallback(scroll_callback);
+    m_window->setWindowFocusCallback(window_focus_callback);
+
+    m_window->setScene(std::shared_ptr<Scene>(this));
 
     m_assetManager = _manager;
-    Reflex::Globals::Render::_activeCamera = std::make_shared<Core::Camera>();
+    Reflex::Globals::rendererGlobals._activeCamera = std::make_shared<Core::Camera>();
 
     loadResources();
-    //Import::importModel("TestModel", "Resources/Models/House/house_obj.obj");
     
     m_skybox = std::make_shared<Reflex::Core::Skybox>(m_assetManager->getMaterial("skyMaterial"));
     return true;
@@ -89,23 +111,17 @@ void Reflex::Scene::loadResources()
 
 void Reflex::Scene::run()
 {
-    auto settings = Reflex::Settings::getInstance();
     log->writeNotice("Running scene");
-
     glEnable(GL_DEPTH_TEST);
 
     const float near_plane = 0.01f;
     const float far_plane = 10000.f;
 
-    if ( glfwRawMouseMotionSupported() )
-        glfwSetInputMode(settings->windowHandle, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-
-    ImGuiIO& io = ImGui::GetIO();
-
-    m_sceneRender->setCamera(Globals::Render::_activeCamera);
+    m_sceneRender->setCamera( Reflex::Globals::rendererGlobals._activeCamera);
+    m_sceneRender->setScreenDimensions(m_window->getSettings()->screenDimensions);
     m_sceneRender->setSkybox(m_skybox);
 
-    while ( glfwWindowShouldClose(settings->windowHandle) == false )
+    while ( Reflex::Globals::windowGlobals.activeWindow->shouldClose() == false )
     {
         const double currentFrame = glfwGetTime();
 
@@ -118,7 +134,7 @@ void Reflex::Scene::run()
         glClearColor(0.25f, 0.25f, 0.5f, 1.0f); // Background Fill Color
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        UI::updateUI(settings->windowHandle);
+        m_window->updateUI();
         ImGui::ShowDemoWindow();
 
         UI::showMainMenu();
@@ -128,25 +144,23 @@ void Reflex::Scene::run()
 
         ImGui::Render();
 
-        auto proj = glm::perspective(Reflex::Globals::Render::_activeCamera->Zoom,
+        auto proj = glm::perspective( Reflex::Globals::rendererGlobals._activeCamera->Zoom,
             (float)1920 / (float)1080,
             near_plane, far_plane);
-        glm::mat4 view = Reflex::Globals::Render::_activeCamera->getViewMatrix();
+        glm::mat4 view =  Reflex::Globals::rendererGlobals._activeCamera->getViewMatrix();
 
         m_sceneRender->updateCurrentRenderValue(Renderer::CurrentRenderValues({ view, proj }));
 
 
-       m_sceneRender->renderBatch(_GOVec);
+       //m_sceneRender->renderBatch(m_GameObjectVec, true);
 
        m_sceneRender->renderSkybox({view, proj}); 
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        glfwSwapBuffers(settings->windowHandle); // Flip Buffers and Draw
-        glfwPollEvents();
+        m_window->swapBuffer();
+        m_window->pollEvents();
     }
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 }
 
 void Reflex::Scene::stop()
@@ -159,7 +173,4 @@ void Reflex::Scene::save()
 
 void Reflex::Scene::setRenderer(const std::shared_ptr<Renderer::Renderer_OpenGL>& renderer)
 {
-    m_sceneRender = renderer;
 }
-
-

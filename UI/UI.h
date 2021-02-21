@@ -4,6 +4,7 @@
 #include "Reflex-Core/GameObject.h"
 #include "Reflex-Core/Cache.h"
 #include "Reflex-AssetManager.h"
+#include "../Globals.h"
 
 
 namespace UI {
@@ -286,7 +287,7 @@ namespace UI {
                     userGuide = true;
 
                 if (ImGui::MenuItem("Exit", nullptr))
-                    glfwWindowShouldClose(Reflex::Settings::getInstance()->windowHandle);
+                    Reflex::Globals::windowGlobals.activeWindow->close();
 
                 ImGui::EndMenu();
             }
